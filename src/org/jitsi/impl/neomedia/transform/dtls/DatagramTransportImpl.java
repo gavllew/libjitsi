@@ -464,7 +464,7 @@ public class DatagramTransportImpl
         assertNotClosed(false);
 
         // If possible, construct a single datagram from multiple DTLS records.
-        if (len >= DtlsPacketTransformer.DTLS_RECORD_HEADER_LENGTH)
+        if (len > DtlsPacketTransformer.DTLS_RECORD_HEADER_LENGTH)
         {
             short type = TlsUtils.readUint8(buf, off);
             boolean endOfFlight = false;
@@ -472,7 +472,8 @@ public class DatagramTransportImpl
             switch (type)
             {
             case ContentType.handshake:
-                short msg_type = TlsUtils.readUint8(buf, off + 11);
+                short msg_type = TlsUtils.readUint8(buf,
+                        off + DtlsPacketTransformer.DTLS_RECORD_HEADER_LENGTH);
 
                 switch (msg_type)
                 {
